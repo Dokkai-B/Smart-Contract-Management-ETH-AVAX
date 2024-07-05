@@ -16,7 +16,7 @@
 // SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.9;
 
-contract UniqueAssessment {
+contract Assessment {
     // State variables
     address payable public owner; // The owner of the contract
     uint256 public totalFunds; // The total funds in the contract
