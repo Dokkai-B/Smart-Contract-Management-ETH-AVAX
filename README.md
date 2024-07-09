@@ -40,9 +40,9 @@ cd online-metacrafters-bank
 
 ### Install Dependencies
 
-\``bash
+```bash
 npm install
-\``
+```
 
 ### Configure MetaMask
 
@@ -58,23 +58,23 @@ npm install
 
 1. Start a local Ethereum network using Hardhat:
 
-    \``bash
+    ```bash
     npx hardhat node
-    \``
+    ```
 
 2. Open a new terminal in the project directory and deploy the smart contract:
 
-    \``bash
+    ```bash
     npx hardhat run scripts/deploy.js --network localhost
-    \``
+    ```
 
 3. Note the contract address displayed in the terminal after deployment. Update the `contractAddress` variable in `pages/index.js` with this address.
 
 ### Run the Development Server
 
-\``bash
+```bash
 npm run dev
-\``
+```
 
 ### Open the Application
 
