@@ -33,14 +33,16 @@ Online Metacrafters Bank is a decentralized application (DApp) that allows users
 
 ### Clone the Repository
 
-```bash
+\``bash
 git clone https://github.com/your-username/online-metacrafters-bank.git
 cd online-metacrafters-bank
+\``
 
 ### Install Dependencies
 
-```bash
+\``bash
 npm install
+\``
 
 ### Configure MetaMask
 
@@ -56,22 +58,23 @@ npm install
 
 1. Start a local Ethereum network using Hardhat:
 
-    ```bash
+    \``bash
     npx hardhat node
-    ```
+    \``
 
 2. Open a new terminal in the project directory and deploy the smart contract:
 
-    ```bash
+    \``bash
     npx hardhat run scripts/deploy.js --network localhost
-    ```
+    \``
 
 3. Note the contract address displayed in the terminal after deployment. Update the `contractAddress` variable in `pages/index.js` with this address.
 
 ### Run the Development Server
 
-```bash
+\``bash
 npm run dev
+\``
 
 ### Open the Application
 
@@ -103,11 +106,11 @@ The frontend is built using Next.js and Chakra UI. The main application file is 
 - Ethers.js
 - Next.js
 
-## Help
+### Help
 
 If you encounter any issues or have any questions, please feel free to open an issue in the [GitHub repository](https://github.com/your-username/online-metacrafters-bank/issues) or contact the project maintainers.
 
-### Useful Links
+#### Useful Links
 
 - [MetaMask Documentation](https://docs.metamask.io/wallet/)
 - [Hardhat Documentation](https://hardhat.org/docs)
