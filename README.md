@@ -36,9 +36,10 @@ Online Metacrafters Bank is a decentralized application (DApp) that allows users
 ```bash
 git clone https://github.com/your-username/online-metacrafters-bank.git
 cd online-metacrafters-bank
-Install Dependencies
-bash
-Copy code
+
+### Install Dependencies
+
+```bash
 npm install
 Configure MetaMask
 Open MetaMask and create a new account if you don't have one.
