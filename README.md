@@ -108,7 +108,7 @@ The frontend is built using Next.js and Chakra UI. The main application file is 
 
 ### Help
 
-If you encounter any issues or have any questions, please feel free to open an issue in the [GitHub repository](https://github.com/your-username/online-metacrafters-bank/issues) or contact the project maintainers.
+If you encounter any issues or have any questions, please feel free to open an issue in the [GitHub repository](https://github.com/Dokkai-B/Smart-Contract-Management-ETH-AVAX/issues) or contact the project maintainers.
 
 #### Useful Links
 
