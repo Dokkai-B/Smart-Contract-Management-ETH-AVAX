@@ -13,58 +13,94 @@
     4. For some assessments/projects, you will need to share a transaction ID. (This project is NOT one of them.)
 */
 
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.9;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
-contract Assessment {
-    address payable public owner;
-    uint256 public balance;
+contract GuessingGame {
+    uint public difficulty;
+    uint private secretNumber;
+    address public owner;
+    mapping(address => int) public balances; // Store the net winnings or losses of each user
 
-    event Deposit(uint256 amount);
-    event Withdraw(uint256 amount);
-    event Transfer(address to, uint256 amount);
+    event BetPlaced(address indexed player, bool won, uint amount);
+    event BalanceUpdated(address indexed player, int balance);
 
-    constructor() payable {
-        owner = payable(msg.sender);
-        balance = msg.value;
+    constructor() {
+        owner = msg.sender;
     }
 
-    function getBalance() public view returns (uint256) {
-        return balance;
+    function setDifficulty(uint _difficulty) public {
+        require(msg.sender == owner, "Only owner can set the difficulty");
+        difficulty = _difficulty;
+        setSecretNumber();
     }
 
-    function deposit() public payable {
-        require(msg.sender == owner, "You are not the owner of this account");
-        balance += msg.value;
-        emit Deposit(msg.value);
-    }
-
-    error InsufficientBalance(uint256 balance, uint256 withdrawAmount);
-
-    function withdraw(uint256 _withdrawAmount) public {
-        require(msg.sender == owner, "You are not the owner of this account");
-        if (balance < _withdrawAmount) {
-            revert InsufficientBalance({
-                balance: balance,
-                withdrawAmount: _withdrawAmount
-            });
+    function setSecretNumber() private {
+        if (difficulty == 1) {
+            secretNumber = uint(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 10 + 1;
+        } else if (difficulty == 2) {
+            secretNumber = uint(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 50 + 1;
+        } else if (difficulty == 3) {
+            secretNumber = uint(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 100 + 1;
         }
-        balance -= _withdrawAmount;
-        payable(msg.sender).transfer(_withdrawAmount);
-        emit Withdraw(_withdrawAmount);
     }
 
-    function transfer(address payable _to, uint256 _amount) public {
-        require(msg.sender == owner, "You are not the owner of this account");
-        if (balance < _amount) {
-            revert InsufficientBalance({
-                balance: balance,
-                withdrawAmount: _amount
-            });
+    function placeBet(uint guess) public payable {
+        require(msg.value > 0, "Bet amount must be greater than 0");
+
+        // Check if bet amount is within the allowed range
+        (uint minBet, uint maxBet) = getBetRange();
+        require(msg.value >= minBet && msg.value <= maxBet, "Bet amount out of range for current difficulty");
+
+        bool won = guess == secretNumber;
+        uint multiplier = getMultiplier();
+        uint winnings = msg.value * multiplier;
+
+        if (won) {
+            require(address(this).balance >= winnings, "Contract has insufficient funds");
+            balances[msg.sender] += int(winnings - msg.value);
+            payable(msg.sender).transfer(winnings); // Winner gets the bet amount multiplied
+            emit BalanceUpdated(msg.sender, balances[msg.sender]);
+        } else {
+            balances[msg.sender] -= int(msg.value);
+            emit BalanceUpdated(msg.sender, balances[msg.sender]);
         }
-        balance -= _amount;
-        _to.transfer(_amount);
-        emit Transfer(_to, _amount);
+
+        emit BetPlaced(msg.sender, won, msg.value);
+        // Ensure secret number is reset after every bet
+        setSecretNumber();
     }
+
+    function getMultiplier() private view returns (uint) {
+        if (difficulty == 1) {
+            return 1;
+        } else if (difficulty == 2) {
+            return 2;
+        } else if (difficulty == 3) {
+            return 3;
+        }
+        return 1;
+    }
+
+    function getBetRange() public view returns (uint min, uint max) {
+        if (difficulty == 1) {
+            return (0.5 ether, 2 ether);
+        } else if (difficulty == 2) {
+            return (2 ether, 5 ether);
+        } else if (difficulty == 3) {
+            return (5 ether, 10 ether);
+        }
+        return (0.1 ether, 0.1 ether); // Default fallback
+    }
+
+    // Uncomment the following function to add the revealNumber functionality
+    
+    function revealNumber() public view returns (uint) {
+        return secretNumber;
+    }
+    
+
+    // Fallback function to accept ETH sent directly to the contract
+    receive() external payable {}
 }
 
