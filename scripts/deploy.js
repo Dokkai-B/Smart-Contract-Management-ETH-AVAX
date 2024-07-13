@@ -2,18 +2,18 @@
 const hre = require("hardhat");
 
 async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+  // We get the contract to deploy
+  const GuessingGame = await hre.ethers.getContractFactory("GuessingGame");
+  const guessingGame = await GuessingGame.deploy();
 
-  const Assessment = await hre.ethers.getContractFactory("Assessment");
-  const assessment = await Assessment.deploy({ value: hre.ethers.utils.parseEther("1.0") });
+  await guessingGame.deployed();
 
-  await assessment.deployed();
-
-  console.log("Assessment deployed to:", assessment.address);
+  console.log("GuessingGame deployed to:", guessingGame.address);
 }
 
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
